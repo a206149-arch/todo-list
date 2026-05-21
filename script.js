@@ -8,8 +8,6 @@ const singleFields = document.getElementById("singleFields");
 const rangeFields = document.getElementById("rangeFields");
 const todoList = document.getElementById("todoList");
 const emptyMessage = document.getElementById("emptyMessage");
-const totalCount = document.getElementById("totalCount");
-const doneCount = document.getElementById("doneCount");
 const historyList = document.getElementById("historyList");
 const historyEmpty = document.getElementById("historyEmpty");
 const historyCount = document.getElementById("historyCount");
@@ -54,6 +52,18 @@ function formatTodoSchedule(todo) {
   return timeText ? `${dateText} ${timeText}` : dateText;
 }
 
+function getTodoSortTime(todo) {
+  const dateText = todo.type === "range" ? todo.startDate : todo.date;
+  const timeText = todo.type === "range" ? "00:00" : todo.time || "00:00";
+
+  if (!dateText) {
+    return Number.MAX_SAFE_INTEGER;
+  }
+
+  const sortTime = new Date(`${dateText}T${timeText}`).getTime();
+  return Number.isNaN(sortTime) ? Number.MAX_SAFE_INTEGER : sortTime;
+}
+
 function formatDateTime(dateText) {
   if (!dateText) {
     return "之前已完成";
@@ -92,11 +102,7 @@ function updateDateMode() {
   rangeFields.hidden = !isRange;
 }
 
-function updateSummary() {
-  const doneTodos = todos.filter((todo) => todo.done).length;
-
-  totalCount.textContent = `${todos.length} 个任务`;
-  doneCount.textContent = `${doneTodos} 个已完成`;
+function updateEmptyMessage() {
   emptyMessage.classList.toggle("show", todos.length === 0);
 }
 
@@ -105,11 +111,12 @@ function showRewardEffect() {
   reward.className = "reward-effect";
   reward.textContent = "完成 +1";
 
-  for (let index = 0; index < 6; index += 1) {
+  for (let index = 0; index < 10; index += 1) {
     const dot = document.createElement("span");
     dot.className = "reward-dot";
-    dot.style.setProperty("--dot-x", `${Math.cos(index) * 34}px`);
-    dot.style.setProperty("--dot-y", `${Math.sin(index) * 26}px`);
+    const angle = (Math.PI * 2 * index) / 10;
+    dot.style.setProperty("--dot-x", `${Math.cos(angle) * 54}px`);
+    dot.style.setProperty("--dot-y", `${Math.sin(angle) * 38}px`);
     reward.appendChild(dot);
   }
 
@@ -126,9 +133,7 @@ function renderHistory() {
   const completedTodos = todos
     .filter((todo) => todo.done)
     .sort((firstTodo, secondTodo) => {
-      const firstTime = new Date(firstTodo.completedAt || 0).getTime();
-      const secondTime = new Date(secondTodo.completedAt || 0).getTime();
-      return secondTime - firstTime;
+      return getTodoSortTime(secondTodo) - getTodoSortTime(firstTodo);
     });
 
   historyList.innerHTML = "";
@@ -164,8 +169,8 @@ function renderHistory() {
       renderTodos();
     });
 
-    content.append(text, taskDate);
-    item.append(content, completedTime, deleteButton);
+    content.append(text, taskDate, completedTime);
+    item.append(content, deleteButton);
     historyList.appendChild(item);
   });
 }
@@ -173,7 +178,11 @@ function renderHistory() {
 function renderTodos() {
   todoList.innerHTML = "";
 
-  todos.forEach((todo) => {
+  const sortedTodos = [...todos].sort((firstTodo, secondTodo) => {
+    return getTodoSortTime(firstTodo) - getTodoSortTime(secondTodo);
+  });
+
+  sortedTodos.forEach((todo) => {
     const item = document.createElement("li");
     item.className = "todo-item";
     item.classList.toggle("completed", todo.done);
@@ -220,7 +229,7 @@ function renderTodos() {
     todoList.appendChild(item);
   });
 
-  updateSummary();
+  updateEmptyMessage();
   renderHistory();
 }
 

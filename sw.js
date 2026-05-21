@@ -1,4 +1,4 @@
-const CACHE_NAME = "todo-list-v12";
+const CACHE_NAME = "todo-list-v30";
 const FILES_TO_CACHE = [
   "./index.html 16-33-02-409.html",
   "./style.css",
