@@ -10,14 +10,27 @@ const todoList = document.getElementById("todoList");
 const emptyMessage = document.getElementById("emptyMessage");
 const historyList = document.getElementById("historyList");
 const historyEmpty = document.getElementById("historyEmpty");
-const historyCount = document.getElementById("historyCount");
+const confirmModal = document.getElementById("confirmModal");
+const confirmNo = document.getElementById("confirmNo");
+const confirmYes = document.getElementById("confirmYes");
 
 const STORAGE_KEY = "kennyTodoList";
+const HISTORY_STORAGE_KEY = "kennyTodoHistory";
 
 let todos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+const savedHistory = localStorage.getItem(HISTORY_STORAGE_KEY);
+let completionHistory = savedHistory
+  ? JSON.parse(savedHistory)
+  : todos.filter((todo) => todo.done).map((todo) => createCompletionRecord(todo));
+let pendingDeleteId = null;
+let pendingDeleteType = null;
 
 function saveTodos() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+}
+
+function saveCompletionHistory() {
+  localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(completionHistory));
 }
 
 function formatDate(dateText) {
@@ -62,6 +75,30 @@ function getTodoSortTime(todo) {
 
   const sortTime = new Date(`${dateText}T${timeText}`).getTime();
   return Number.isNaN(sortTime) ? Number.MAX_SAFE_INTEGER : sortTime;
+}
+
+function createCompletionRecord(todo) {
+  return {
+    id: todo.id,
+    type: todo.type || "single",
+    text: todo.text,
+    date: todo.date || "",
+    time: todo.time || "",
+    startDate: todo.startDate || "",
+    endDate: todo.endDate || "",
+    completedAt: todo.completedAt || new Date().toISOString()
+  };
+}
+
+function addCompletionRecord(todo) {
+  completionHistory = completionHistory.filter((record) => record.id !== todo.id);
+  completionHistory.unshift(createCompletionRecord(todo));
+  saveCompletionHistory();
+}
+
+function removeCompletionRecord(todoId) {
+  completionHistory = completionHistory.filter((record) => record.id !== todoId);
+  saveCompletionHistory();
 }
 
 function formatDateTime(dateText) {
@@ -129,15 +166,49 @@ function showRewardEffect() {
   });
 }
 
+function deleteTodo(todoId) {
+  const todoToDelete = todos.find((todo) => todo.id === todoId);
+
+  if (todoToDelete && todoToDelete.done) {
+    addCompletionRecord(todoToDelete);
+  }
+
+  todos = todos.filter((currentTodo) => currentTodo.id !== todoId);
+  saveTodos();
+  renderTodos();
+}
+
+function deleteHistoryRecord(recordId) {
+  completionHistory = completionHistory.filter((record) => record.id !== recordId);
+  saveCompletionHistory();
+  renderTodos();
+}
+
+function openDeleteModal(todoId, deleteType) {
+  pendingDeleteId = todoId;
+  pendingDeleteType = deleteType;
+  confirmModal.hidden = false;
+}
+
+function closeDeleteModal() {
+  pendingDeleteId = null;
+  pendingDeleteType = null;
+  confirmModal.hidden = true;
+}
+
+function setupDeleteButton(button, todoId, deleteType) {
+  button.addEventListener("click", () => {
+    openDeleteModal(todoId, deleteType);
+  });
+}
+
 function renderHistory() {
-  const completedTodos = todos
-    .filter((todo) => todo.done)
+  const completedTodos = [...completionHistory]
     .sort((firstTodo, secondTodo) => {
       return getTodoSortTime(secondTodo) - getTodoSortTime(firstTodo);
-    });
+  });
 
   historyList.innerHTML = "";
-  historyCount.textContent = `${completedTodos.length} 条记录`;
   historyEmpty.classList.toggle("show", completedTodos.length === 0);
 
   completedTodos.forEach((todo) => {
@@ -153,23 +224,23 @@ function renderHistory() {
 
     const taskDate = document.createElement("span");
     taskDate.className = "history-date";
-    taskDate.textContent = `任务时间：${formatTodoSchedule(todo)}`;
+    taskDate.textContent = `任务：${formatTodoSchedule(todo)}`;
 
     const completedTime = document.createElement("span");
     completedTime.className = "history-time";
-    completedTime.textContent = `完成时间：${formatDateTime(todo.completedAt)}`;
+    completedTime.textContent = `完成：${formatDateTime(todo.completedAt)}`;
+
+    const meta = document.createElement("div");
+    meta.className = "history-meta";
+    meta.append(taskDate, completedTime);
 
     const deleteButton = document.createElement("button");
     deleteButton.className = "history-delete-btn";
     deleteButton.type = "button";
     deleteButton.textContent = "删除";
-    deleteButton.addEventListener("click", () => {
-      todos = todos.filter((currentTodo) => currentTodo.id !== todo.id);
-      saveTodos();
-      renderTodos();
-    });
+    setupDeleteButton(deleteButton, todo.id, "history");
 
-    content.append(text, taskDate, completedTime);
+    content.append(text, meta);
     item.append(content, deleteButton);
     historyList.appendChild(item);
   });
@@ -179,8 +250,8 @@ function renderTodos() {
   todoList.innerHTML = "";
 
   const sortedTodos = [...todos].sort((firstTodo, secondTodo) => {
-    return getTodoSortTime(firstTodo) - getTodoSortTime(secondTodo);
-  });
+      return getTodoSortTime(firstTodo) - getTodoSortTime(secondTodo);
+    });
 
   sortedTodos.forEach((todo) => {
     const item = document.createElement("li");
@@ -196,6 +267,13 @@ function renderTodos() {
       todo.done = checkbox.checked;
       todo.completedAt = checkbox.checked ? new Date().toISOString() : null;
       saveTodos();
+
+      if (todo.done) {
+        addCompletionRecord(todo);
+      } else {
+        removeCompletionRecord(todo.id);
+      }
+
       renderTodos();
 
       if (!wasDone && checkbox.checked) {
@@ -218,11 +296,7 @@ function renderTodos() {
     deleteButton.className = "delete-btn";
     deleteButton.type = "button";
     deleteButton.textContent = "删除";
-    deleteButton.addEventListener("click", () => {
-      todos = todos.filter((currentTodo) => currentTodo.id !== todo.id);
-      saveTodos();
-      renderTodos();
-    });
+    setupDeleteButton(deleteButton, todo.id, "todo");
 
     content.append(text, date);
     item.append(checkbox, content, deleteButton);
@@ -271,6 +345,36 @@ todoForm.addEventListener("submit", (event) => {
 document.querySelectorAll('input[name="todoMode"]').forEach((modeInput) => {
   modeInput.addEventListener("change", updateDateMode);
 });
+
+confirmNo.addEventListener("click", closeDeleteModal);
+
+confirmYes.addEventListener("click", () => {
+  if (pendingDeleteId !== null) {
+    if (pendingDeleteType === "history") {
+      deleteHistoryRecord(pendingDeleteId);
+    } else {
+      deleteTodo(pendingDeleteId);
+    }
+  }
+
+  closeDeleteModal();
+});
+
+confirmModal.addEventListener("click", (event) => {
+  if (event.target === confirmModal) {
+    closeDeleteModal();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !confirmModal.hidden) {
+    closeDeleteModal();
+  }
+});
+
+if (savedHistory === null) {
+  saveCompletionHistory();
+}
 
 setDefaultDate();
 updateDateMode();
