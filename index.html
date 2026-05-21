@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>待办事项</title>
+  <meta name="theme-color" content="#f2f7ff">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <section class="todo-panel">
+      <header class="app-header">
+        <h1>To-Do List</h1>
+        <p class="subtitle">每一个完成，都是未来的一块拼图。量变促成质变。</p>
+      </header>
+
+      <form class="todo-form" id="todoForm">
+        <div class="mode-group" role="radiogroup" aria-label="选择任务时间类型">
+          <label>
+            <input type="radio" name="todoMode" value="single" checked>
+            <span>单日</span>
+          </label>
+          <label>
+            <input type="radio" name="todoMode" value="range">
+            <span>时间段</span>
+          </label>
+        </div>
+
+        <div class="date-fields single-fields" id="singleFields">
+          <div class="input-group">
+            <label for="todoDate">日期</label>
+            <input type="date" id="todoDate" aria-label="选择任务日期">
+          </div>
+
+          <div class="input-group">
+            <label for="todoTime">时间（可选）</label>
+            <input type="time" id="todoTime" aria-label="选择任务时间">
+          </div>
+        </div>
+
+        <div class="date-fields range-fields" id="rangeFields" hidden>
+          <div class="input-group">
+            <label for="todoStartDate">开始日期</label>
+            <input type="date" id="todoStartDate" aria-label="选择任务开始日期">
+          </div>
+
+          <div class="input-group">
+            <label for="todoEndDate">结束日期</label>
+            <input type="date" id="todoEndDate" aria-label="选择任务结束日期">
+          </div>
+        </div>
+
+        <div class="input-row">
+          <div class="input-group task-input">
+            <label for="todoInput">任务</label>
+            <input
+              type="text"
+              id="todoInput"
+              placeholder="请输入你的待办事项"
+              autocomplete="off"
+              aria-label="输入一个新任务"
+            >
+          </div>
+
+          <button type="submit">添加</button>
+        </div>
+      </form>
+
+      <div class="summary">
+        <span id="totalCount">0 个任务</span>
+        <span id="doneCount">0 个已完成</span>
+      </div>
+
+      <ul class="todo-list" id="todoList"></ul>
+
+      <p class="empty-message" id="emptyMessage">暂无任务，先添加一个吧。</p>
+
+      <section class="history-section" aria-labelledby="historyTitle">
+        <div class="history-header">
+          <h2 id="historyTitle">完成记录</h2>
+          <span id="historyCount">0 条记录</span>
+        </div>
+        <ul class="history-list" id="historyList"></ul>
+        <p class="history-empty" id="historyEmpty">完成事项后会记录在这里。</p>
+      </section>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
