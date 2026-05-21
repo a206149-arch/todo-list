@@ -219,7 +219,7 @@ h1 {
 .todo-text {
   display: block;
   color: #1f2937;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.42;
   word-break: break-word;
 }
@@ -674,10 +674,6 @@ h1 {
 
   .history-header {
     flex-direction: column;
-  }
-
-  .section-header h2 {
-    font-size: 14px;
   }
 
   .history-text {
