@@ -25,28 +25,28 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 29px;
 }
 
 .todo-panel {
   width: min(720px, 100%);
   border: 1px solid rgba(255, 255, 255, 0.86);
   border-radius: 30px;
-  padding: 34px;
+  padding: 41px;
   background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(24px);
   box-shadow: 0 30px 90px rgba(31, 52, 92, 0.16);
 }
 
 .app-header {
-  padding-top: 6px;
-  margin-bottom: 32px;
+  padding-top: 9px;
+  margin-bottom: 38px;
 }
 
 h1 {
-  margin-bottom: 12px;
+  margin-bottom: 15px;
   color: #0f172a;
-  font-size: clamp(23px, 3.15vw, 31px);
+  font-size: clamp(26px, 3.65vw, 35px);
   line-height: 1;
   letter-spacing: 0;
   text-shadow: none;
@@ -55,14 +55,14 @@ h1 {
 .subtitle {
   max-width: 520px;
   color: #667085;
-  font-size: 17.5px;
-  line-height: 1.5;
+  font-size: 19.5px;
+  line-height: 1.64;
 }
 
 .todo-form {
   display: grid;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: 15px;
+  margin-bottom: 21px;
 }
 
 .mode-group {
@@ -88,9 +88,9 @@ h1 {
 .mode-group span {
   display: block;
   border-radius: 12px;
-  padding: 7px 13px;
+  padding: 11px 17px;
   color: #667085;
-  font-size: 14px;
+  font-size: 15.5px;
   font-weight: 800;
   transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
@@ -120,12 +120,12 @@ h1 {
 
 .input-group {
   display: grid;
-  gap: 4px;
+  gap: 9px;
 }
 
 .input-group label {
   color: #667085;
-  font-size: 13px;
+  font-size: 14.5px;
   font-weight: 700;
 }
 
@@ -135,7 +135,7 @@ h1 {
   min-width: 0;
   border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: 17px;
-  padding: 11px 15px;
+  padding: 17px 19px;
   color: #111827;
   background: rgba(255, 255, 255, 0.86);
   outline: none;
@@ -168,11 +168,11 @@ h1 {
 .todo-form button {
   border: 0;
   border-radius: 17px;
-  min-height: 42px;
-  padding: 0 22px;
+  min-height: 56px;
+  padding: 0 28px;
   color: #ffffff;
   background: linear-gradient(135deg, #b9a7ff 0%, #9f8cff 48%, #7fb7ff 100%);
-  font-size: 15px;
+  font-size: 16.5px;
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 16px 34px rgba(137, 112, 255, 0.24);
@@ -185,15 +185,15 @@ h1 {
 }
 
 .todo-section {
-  margin-top: 18px;
-  margin-bottom: 10px;
+  margin-top: 25px;
+  margin-bottom: 16px;
   border-top: 1px solid rgba(15, 23, 42, 0.08);
-  padding-top: 13px;
+  padding-top: 19px;
 }
 
 .todo-list {
   display: grid;
-  gap: 8px;
+  gap: 12px;
   list-style: none;
 }
 
@@ -201,17 +201,17 @@ h1 {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 15px;
-  padding: 11px 12px;
+  padding: 15px 16px;
   background: rgba(255, 255, 255, 0.72);
   box-shadow: 0 10px 28px rgba(31, 52, 92, 0.08);
 }
 
 .todo-check {
-  width: 22px;
-  height: 22px;
+  width: 25px;
+  height: 25px;
   accent-color: #0071e3;
   cursor: pointer;
 }
@@ -219,8 +219,8 @@ h1 {
 .todo-text {
   display: block;
   color: #1f2937;
-  font-size: 16px;
-  line-height: 1.42;
+  font-size: 17.5px;
+  line-height: 1.52;
   word-break: break-word;
 }
 
@@ -231,12 +231,12 @@ h1 {
 .todo-date {
   display: inline-flex;
   width: fit-content;
-  margin-top: 3px;
+  margin-top: 6px;
   border-radius: 999px;
-  padding: 3px 8px;
+  padding: 5px 10px;
   color: #0066cc;
   background: rgba(0, 102, 204, 0.08);
-  font-size: 12px;
+  font-size: 13.5px;
   font-weight: 700;
 }
 
@@ -253,10 +253,10 @@ h1 {
 .delete-btn {
   border: 0;
   border-radius: 10px;
-  padding: 7px 9px;
+  padding: 8px 11px;
   color: #d92d20;
   background: rgba(217, 45, 32, 0.06);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
@@ -269,10 +269,10 @@ h1 {
 
 .empty-message {
   display: none;
-  margin-top: 12px;
+  margin-top: 18px;
   border: 1px dashed rgba(15, 23, 42, 0.14);
   border-radius: 20px;
-  padding: 18px;
+  padding: 28px;
   color: #667085;
   background: rgba(255, 255, 255, 0.5);
   text-align: center;
@@ -283,9 +283,9 @@ h1 {
 }
 
 .history-section {
-  margin-top: 20px;
+  margin-top: 28px;
   border-top: 1px solid rgba(15, 23, 42, 0.08);
-  padding-top: 14px;
+  padding-top: 21px;
 }
 
 .section-header {
@@ -293,18 +293,18 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 .section-header h2 {
   color: #0f172a;
-  font-size: 15px;
+  font-size: 17.5px;
   line-height: 1.2;
 }
 
 .history-list {
   display: grid;
-  gap: 8px;
+  gap: 12px;
   list-style: none;
 }
 
@@ -312,10 +312,10 @@ h1 {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 10px;
+  gap: 13px;
   border: 1px solid rgba(15, 23, 42, 0.07);
   border-radius: 16px;
-  padding: 10px 12px;
+  padding: 14px 16px;
   background: rgba(255, 255, 255, 0.54);
 }
 
@@ -326,23 +326,23 @@ h1 {
 .history-text {
   display: block;
   color: #344054;
-  font-size: 14px;
-  line-height: 1.38;
+  font-size: 15.5px;
+  line-height: 1.48;
   word-break: break-word;
 }
 
 .history-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 11px;
-  margin-top: 4px;
+  gap: 5px 12px;
+  margin-top: 6px;
 }
 
 .history-date,
 .history-time {
   color: #667085;
-  font-size: 11px;
-  line-height: 1.4;
+  font-size: 12.5px;
+  line-height: 1.48;
 }
 
 .history-date {
@@ -360,10 +360,10 @@ h1 {
 .history-delete-btn {
   border: 0;
   border-radius: 10px;
-  padding: 7px 9px;
+  padding: 8px 11px;
   color: #d92d20;
   background: rgba(217, 45, 32, 0.06);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
@@ -535,35 +535,35 @@ h1 {
 @media (max-width: 600px) {
   .app {
     align-items: flex-start;
-    padding: 18px;
+    padding: 19px;
   }
 
   .todo-panel {
     width: 100%;
     overflow: hidden;
     border-radius: 24px;
-    padding: 18px 15px;
+    padding: 22px 17px;
   }
 
   .app-header {
-    padding-top: 5px;
-    margin-bottom: 22px;
+    padding-top: 8px;
+    margin-bottom: 26px;
   }
 
   h1 {
-    margin-bottom: 5px;
-    font-size: clamp(19px, 5.9vw, 24px);
+    margin-bottom: 8px;
+    font-size: clamp(21px, 6.35vw, 26px);
   }
 
   .subtitle {
-    font-size: 14px;
-    line-height: 1.36;
+    font-size: 15.5px;
+    line-height: 1.5;
   }
 
   .todo-form {
     grid-template-columns: 1fr;
-    gap: 4px;
-    margin-bottom: 8px;
+    gap: 8px;
+    margin-bottom: 13px;
   }
 
   .date-fields,
@@ -578,26 +578,26 @@ h1 {
   }
 
   .input-group {
-    gap: 2px;
+    gap: 6px;
   }
 
   .input-group label {
-    font-size: 11px;
+    font-size: 12.5px;
   }
 
   .todo-form input {
     border-radius: 15px;
-    padding: 6px 11px;
-    font-size: 15px;
+    padding: 11px 14px;
+    font-size: 16.5px;
   }
 
   .todo-form input[type="date"],
   .todo-form input[type="time"] {
     -webkit-appearance: none;
     appearance: none;
-    height: 31px;
-    padding: 6px 11px;
-    font-size: 15px;
+    height: 41px;
+    padding: 10px 14px;
+    font-size: 16.5px;
     text-align: left;
   }
 
@@ -606,58 +606,58 @@ h1 {
   }
 
   .mode-group span {
-    padding: 4px 10px;
-    font-size: 12px;
+    padding: 8px 13px;
+    font-size: 13.5px;
   }
 
   .todo-form button {
-    min-height: 31px;
+    min-height: 43px;
     border-radius: 15px;
-    font-size: 14px;
+    font-size: 15.5px;
   }
 
   .todo-list {
-    gap: 7px;
+    gap: 10px;
   }
 
   .todo-section {
-    margin-top: 15px;
-    margin-bottom: 9px;
-    padding-top: 10px;
+    margin-top: 19px;
+    margin-bottom: 14px;
+    padding-top: 14px;
   }
 
   .todo-item {
-    gap: 8px;
+    gap: 11px;
     border-radius: 14px;
-    padding: 10px 10px;
+    padding: 13px 12px;
   }
 
   .todo-check {
-    width: 20px;
-    height: 20px;
+    width: 23px;
+    height: 23px;
   }
 
   .todo-date {
-    margin-top: 2px;
-    padding: 3px 7px;
-    font-size: 11px;
+    margin-top: 5px;
+    padding: 4px 8px;
+    font-size: 12.5px;
   }
 
   .delete-btn {
     border-radius: 10px;
-    padding: 6px 8px;
-    font-size: 11px;
+    padding: 7px 9px;
+    font-size: 12px;
   }
 
   .empty-message {
-    margin-top: 10px;
+    margin-top: 13px;
     border-radius: 16px;
-    padding: 16px;
+    padding: 20px;
   }
 
   .history-section {
-    margin-top: 16px;
-    padding-top: 11px;
+    margin-top: 22px;
+    padding-top: 15px;
   }
 
   .section-header {
@@ -668,8 +668,8 @@ h1 {
   .history-item {
     grid-template-columns: 1fr auto;
     align-items: center;
-    gap: 8px;
-    padding: 8px 9px;
+    gap: 11px;
+    padding: 11px 12px;
   }
 
   .history-header {
@@ -677,16 +677,16 @@ h1 {
   }
 
   .history-text {
-    font-size: 13px;
+    font-size: 14.5px;
   }
 
   .history-date,
   .history-time {
-    font-size: 10.5px;
+    font-size: 12px;
   }
 
   .history-delete-btn {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .history-time {
