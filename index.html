@@ -15,7 +15,7 @@
     <section class="todo-panel">
       <header class="app-header">
         <h1>To-Do List</h1>
-        <p class="subtitle">量变促成质变；每一个完成，都是未来的一块拼图；做完今天，未来会感谢现在。</p>
+        <p class="subtitle">量变促成质变  |  每一个完成, 都是未来的一块拼图  |  做完今天, 未来会感谢现在</p>
       </header>
 
       <form class="todo-form" id="todoForm">
@@ -98,6 +98,57 @@
         <button type="button" class="confirm-yes" id="confirmYes">是</button>
       </div>
     </div>
+  </div>
+
+  <div class="edit-modal" id="editModal" hidden>
+    <form class="edit-dialog" id="editForm" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+      <h2 id="editTitle">编辑待办事项</h2>
+
+      <div class="mode-group edit-mode-group" role="radiogroup" aria-label="选择编辑任务时间类型">
+        <label>
+          <input type="radio" name="editMode" value="single">
+          <span>单日</span>
+        </label>
+        <label>
+          <input type="radio" name="editMode" value="range">
+          <span>时间段</span>
+        </label>
+      </div>
+
+      <div class="date-fields edit-single-fields" id="editSingleFields">
+        <div class="input-group">
+          <label for="editDate">日期</label>
+          <input type="date" id="editDate" aria-label="编辑任务日期">
+        </div>
+
+        <div class="input-group">
+          <label for="editTime">时间（可选）</label>
+          <input type="time" id="editTime" aria-label="编辑任务时间">
+        </div>
+      </div>
+
+      <div class="date-fields edit-range-fields" id="editRangeFields" hidden>
+        <div class="input-group">
+          <label for="editStartDate">开始日期</label>
+          <input type="date" id="editStartDate" aria-label="编辑任务开始日期">
+        </div>
+
+        <div class="input-group">
+          <label for="editEndDate">结束日期</label>
+          <input type="date" id="editEndDate" aria-label="编辑任务结束日期">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="editInput">任务</label>
+        <input type="text" id="editInput" autocomplete="off" aria-label="编辑任务名称">
+      </div>
+
+      <div class="edit-actions">
+        <button type="button" class="edit-cancel" id="editCancel">取消</button>
+        <button type="submit" class="edit-save">保存</button>
+      </div>
+    </form>
   </div>
 
   <script src="script.js"></script>

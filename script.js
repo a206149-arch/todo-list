@@ -13,6 +13,16 @@ const historyEmpty = document.getElementById("historyEmpty");
 const confirmModal = document.getElementById("confirmModal");
 const confirmNo = document.getElementById("confirmNo");
 const confirmYes = document.getElementById("confirmYes");
+const editModal = document.getElementById("editModal");
+const editForm = document.getElementById("editForm");
+const editInput = document.getElementById("editInput");
+const editDate = document.getElementById("editDate");
+const editTime = document.getElementById("editTime");
+const editStartDate = document.getElementById("editStartDate");
+const editEndDate = document.getElementById("editEndDate");
+const editSingleFields = document.getElementById("editSingleFields");
+const editRangeFields = document.getElementById("editRangeFields");
+const editCancel = document.getElementById("editCancel");
 
 const STORAGE_KEY = "kennyTodoList";
 const HISTORY_STORAGE_KEY = "kennyTodoHistory";
@@ -24,6 +34,7 @@ let completionHistory = savedHistory
   : todos.filter((todo) => todo.done).map((todo) => createCompletionRecord(todo));
 let pendingDeleteId = null;
 let pendingDeleteType = null;
+let pendingEditId = null;
 
 function saveTodos() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
@@ -77,6 +88,33 @@ function getTodoSortTime(todo) {
   return Number.isNaN(sortTime) ? Number.MAX_SAFE_INTEGER : sortTime;
 }
 
+function getTodoSortDate(todo) {
+  return todo.type === "range" ? todo.startDate : todo.date;
+}
+
+function getTodoTypePriority(todo) {
+  return todo.type === "range" ? 1 : 0;
+}
+
+function compareTodosBySchedule(firstTodo, secondTodo) {
+  const firstDate = getTodoSortDate(firstTodo);
+  const secondDate = getTodoSortDate(secondTodo);
+  const firstDateTime = firstDate ? new Date(`${firstDate}T00:00`).getTime() : Number.MAX_SAFE_INTEGER;
+  const secondDateTime = secondDate ? new Date(`${secondDate}T00:00`).getTime() : Number.MAX_SAFE_INTEGER;
+
+  if (firstDateTime !== secondDateTime) {
+    return firstDateTime - secondDateTime;
+  }
+
+  const typePriorityDiff = getTodoTypePriority(firstTodo) - getTodoTypePriority(secondTodo);
+
+  if (typePriorityDiff !== 0) {
+    return typePriorityDiff;
+  }
+
+  return getTodoSortTime(firstTodo) - getTodoSortTime(secondTodo);
+}
+
 function createCompletionRecord(todo) {
   return {
     id: todo.id,
@@ -93,6 +131,25 @@ function createCompletionRecord(todo) {
 function addCompletionRecord(todo) {
   completionHistory = completionHistory.filter((record) => record.id !== todo.id);
   completionHistory.unshift(createCompletionRecord(todo));
+  saveCompletionHistory();
+}
+
+function syncCompletionRecord(todo) {
+  completionHistory = completionHistory.map((record) => {
+    if (record.id !== todo.id) {
+      return record;
+    }
+
+    return {
+      ...record,
+      type: todo.type || "single",
+      text: todo.text,
+      date: todo.date || "",
+      time: todo.time || "",
+      startDate: todo.startDate || "",
+      endDate: todo.endDate || ""
+    };
+  });
   saveCompletionHistory();
 }
 
@@ -137,6 +194,27 @@ function updateDateMode() {
 
   singleFields.hidden = isRange;
   rangeFields.hidden = !isRange;
+}
+
+function getEditMode() {
+  return document.querySelector('input[name="editMode"]:checked').value;
+}
+
+function setEditMode(mode) {
+  const modeInput = document.querySelector(`input[name="editMode"][value="${mode}"]`);
+
+  if (modeInput) {
+    modeInput.checked = true;
+  }
+
+  updateEditDateMode();
+}
+
+function updateEditDateMode() {
+  const isRange = getEditMode() === "range";
+
+  editSingleFields.hidden = isRange;
+  editRangeFields.hidden = !isRange;
 }
 
 function updateEmptyMessage() {
@@ -202,6 +280,31 @@ function setupDeleteButton(button, todoId, deleteType) {
   });
 }
 
+function openEditModal(todoId) {
+  const todo = todos.find((currentTodo) => currentTodo.id === todoId);
+
+  if (!todo) {
+    return;
+  }
+
+  pendingEditId = todoId;
+  setEditMode(todo.type || "single");
+  editInput.value = todo.text;
+  editDate.value = todo.date || todo.startDate || "";
+  editTime.value = todo.time || "";
+  editStartDate.value = todo.startDate || todo.date || "";
+  editEndDate.value = todo.endDate || todo.date || "";
+  editModal.hidden = false;
+  editInput.focus();
+}
+
+function closeEditModal() {
+  pendingEditId = null;
+  editModal.hidden = true;
+  editForm.reset();
+  setEditMode("single");
+}
+
 function renderHistory() {
   const completedTodos = [...completionHistory]
     .sort((firstTodo, secondTodo) => {
@@ -249,9 +352,7 @@ function renderHistory() {
 function renderTodos() {
   todoList.innerHTML = "";
 
-  const sortedTodos = [...todos].sort((firstTodo, secondTodo) => {
-      return getTodoSortTime(firstTodo) - getTodoSortTime(secondTodo);
-    });
+  const sortedTodos = [...todos].sort(compareTodosBySchedule);
 
   sortedTodos.forEach((todo) => {
     const item = document.createElement("li");
@@ -298,8 +399,20 @@ function renderTodos() {
     deleteButton.textContent = "删除";
     setupDeleteButton(deleteButton, todo.id, "todo");
 
+    const editButton = document.createElement("button");
+    editButton.className = "edit-btn";
+    editButton.type = "button";
+    editButton.textContent = "编辑";
+    editButton.addEventListener("click", () => {
+      openEditModal(todo.id);
+    });
+
+    const actions = document.createElement("div");
+    actions.className = "todo-actions";
+    actions.append(editButton, deleteButton);
+
     content.append(text, date);
-    item.append(checkbox, content, deleteButton);
+    item.append(checkbox, content, actions);
     todoList.appendChild(item);
   });
 
@@ -346,6 +459,51 @@ document.querySelectorAll('input[name="todoMode"]').forEach((modeInput) => {
   modeInput.addEventListener("change", updateDateMode);
 });
 
+document.querySelectorAll('input[name="editMode"]').forEach((modeInput) => {
+  modeInput.addEventListener("change", updateEditDateMode);
+});
+
+editCancel.addEventListener("click", closeEditModal);
+
+editForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const todo = todos.find((currentTodo) => currentTodo.id === pendingEditId);
+  const text = editInput.value.trim();
+  const mode = getEditMode();
+
+  if (!todo) {
+    closeEditModal();
+    return;
+  }
+
+  if (text === "") {
+    editInput.focus();
+    return;
+  }
+
+  if (mode === "range" && editStartDate.value > editEndDate.value) {
+    editEndDate.focus();
+    return;
+  }
+
+  todo.type = mode;
+  todo.text = text;
+  todo.date = mode === "single" ? editDate.value : "";
+  todo.time = mode === "single" ? editTime.value : "";
+  todo.startDate = mode === "range" ? editStartDate.value : "";
+  todo.endDate = mode === "range" ? editEndDate.value : "";
+
+  saveTodos();
+
+  if (todo.done) {
+    syncCompletionRecord(todo);
+  }
+
+  closeEditModal();
+  renderTodos();
+});
+
 confirmNo.addEventListener("click", closeDeleteModal);
 
 confirmYes.addEventListener("click", () => {
@@ -366,9 +524,19 @@ confirmModal.addEventListener("click", (event) => {
   }
 });
 
+editModal.addEventListener("click", (event) => {
+  if (event.target === editModal) {
+    closeEditModal();
+  }
+});
+
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !confirmModal.hidden) {
     closeDeleteModal();
+  }
+
+  if (event.key === "Escape" && !editModal.hidden) {
+    closeEditModal();
   }
 });
 

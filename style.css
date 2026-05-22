@@ -267,6 +267,30 @@ h1 {
   transform: translateY(-1px);
 }
 
+.todo-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.edit-btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 11px;
+  color: #475467;
+  background: rgba(15, 23, 42, 0.06);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.edit-btn:hover {
+  background: rgba(15, 23, 42, 0.1);
+  transform: translateY(-1px);
+}
+
 .empty-message {
   display: none;
   margin-top: 18px;
@@ -388,7 +412,8 @@ h1 {
   display: block;
 }
 
-.confirm-modal {
+.confirm-modal,
+.edit-modal {
   position: fixed;
   inset: 0;
   z-index: 30;
@@ -399,11 +424,13 @@ h1 {
   backdrop-filter: blur(10px);
 }
 
-.confirm-modal[hidden] {
+.confirm-modal[hidden],
+.edit-modal[hidden] {
   display: none;
 }
 
-.confirm-dialog {
+.confirm-dialog,
+.edit-dialog {
   width: min(300px, 100%);
   border: 1px solid rgba(255, 255, 255, 0.78);
   border-radius: 22px;
@@ -413,20 +440,65 @@ h1 {
   text-align: center;
 }
 
-.confirm-dialog h2 {
+.edit-dialog {
+  width: min(520px, 100%);
+  max-width: 100%;
+  display: grid;
+  gap: 14px;
+  text-align: left;
+  overflow: hidden;
+}
+
+.confirm-dialog h2,
+.edit-dialog h2 {
   margin-bottom: 16px;
   color: #0f172a;
   font-size: 17px;
   line-height: 1.35;
 }
 
-.confirm-actions {
+.edit-dialog h2 {
+  margin-bottom: 0;
+}
+
+.edit-dialog input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 15px;
+  padding: 12px 14px;
+  color: #111827;
+  background: rgba(255, 255, 255, 0.9);
+  outline: none;
+}
+
+.edit-dialog input:focus {
+  border-color: rgba(0, 113, 227, 0.48);
+  box-shadow: 0 0 0 5px rgba(0, 113, 227, 0.1);
+}
+
+.edit-dialog input[type="date"],
+.edit-dialog input[type="time"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-inline-size: 0;
+}
+
+.edit-mode-group {
+  width: 100%;
+}
+
+.confirm-actions,
+.edit-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-.confirm-actions button {
+.confirm-actions button,
+.edit-actions button {
   border: 0;
   border-radius: 14px;
   min-height: 42px;
@@ -434,14 +506,20 @@ h1 {
   cursor: pointer;
 }
 
-.confirm-no {
+.confirm-no,
+.edit-cancel {
   color: #475467;
   background: rgba(15, 23, 42, 0.07);
 }
 
-.confirm-yes {
+.confirm-yes,
+.edit-save {
   color: #ffffff;
   background: rgba(217, 45, 32, 0.74);
+}
+
+.edit-save {
+  background: linear-gradient(135deg, #b9a7ff 0%, #9f8cff 48%, #7fb7ff 100%);
 }
 
 .reward-effect {
@@ -649,6 +727,16 @@ h1 {
     font-size: 12px;
   }
 
+  .todo-actions {
+    gap: 6px;
+  }
+
+  .edit-btn {
+    border-radius: 10px;
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+
   .empty-message {
     margin-top: 13px;
     border-radius: 16px;
@@ -691,5 +779,47 @@ h1 {
 
   .history-time {
     white-space: normal;
+  }
+
+  .edit-dialog {
+    width: 100%;
+    max-height: calc(100dvh - 44px);
+    gap: 12px;
+    padding: 18px;
+    overflow-y: auto;
+  }
+
+  .edit-dialog .date-fields {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .edit-dialog .input-group {
+    min-width: 0;
+  }
+
+  .edit-dialog input {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .edit-dialog input[type="date"],
+  .edit-dialog input[type="time"] {
+    -webkit-appearance: none;
+    appearance: none;
+    inline-size: 100%;
+    min-inline-size: 0;
+    height: 41px;
+    padding: 10px 14px;
+  }
+
+  .edit-dialog h2 {
+    font-size: 16px;
+  }
+
+  .edit-actions button {
+    min-height: 40px;
   }
 }
